@@ -13,9 +13,6 @@ const server = http.createServer(app);
 const wss    = new WebSocket.Server({ server });
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 app.use(express.json());
 
 // ── IN-MEMORY STORES ──────────────────────────────────────────
@@ -553,5 +550,6 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`✅ NEON CLASH Server on port ${PORT}`);
 });
+
 
 
