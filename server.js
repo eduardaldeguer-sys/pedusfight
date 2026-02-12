@@ -12,12 +12,21 @@ const app    = express();
 const server = http.createServer(app);
 const wss    = new WebSocket.Server({ server });
 
-app.use(express.static('.'));
+// Serve static files from current directory
+app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 
-// Root route - serve index.html
+// Root route - serve index.html or redirect to game.html
 app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: '.' });
+  const indexPath = path.join(__dirname, 'index.html');
+  const fs = require('fs');
+  
+  // Check if index.html exists, otherwise redirect to game.html
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.redirect('/game.html');
+  }
 });
 
 
@@ -551,8 +560,52 @@ app.get('/api/stats', (req, res) => {
   res.json({ online: wss.clients.size, rooms: rooms.size, queue: queue.length });
 });
 
+// Health check endpoint for monitoring
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime(), timestamp: Date.now() });
+});
+
+// 404 handler - must be AFTER all other routes
+app.use((req, res) => {
+  res.status(404).send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>404 - NEON CLASH</title>
+      <style>
+        body { 
+          background: #050510; 
+          color: #00d4ff; 
+          font-family: monospace; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          height: 100vh; 
+          margin: 0;
+          text-align: center;
+        }
+        h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 0 0 10px #00d4ff; }
+        p { font-size: 18px; }
+        a { color: #ffe600; text-decoration: none; border-bottom: 1px solid #ffe600; }
+        a:hover { color: #ff003c; border-color: #ff003c; }
+      </style>
+    </head>
+    <body>
+      <div>
+        <h1>404 - NOT FOUND</h1>
+        <p>La página que buscas no existe.</p>
+        <p><a href="/game.html">← Ir al juego</a></p>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
 // ── START ────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`✅ NEON CLASH Server on port ${PORT}`);
+  console.log(`📂 Serving files from: ${__dirname}`);
+  console.log(`🌐 Game URL: http://localhost:${PORT}/game.html`);
 });
