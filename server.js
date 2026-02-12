@@ -20,6 +20,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   const indexPath = path.join(__dirname, 'index.html');
   const fs = require('fs');
+  }
 
 
 
@@ -602,4 +603,5 @@ server.listen(PORT, () => {
   console.log(`📂 Serving files from: ${__dirname}`);
   console.log(`🌐 Game URL: http://localhost:${PORT}/game.html`);
 });
+
 
