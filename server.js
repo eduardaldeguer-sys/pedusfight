@@ -18,9 +18,9 @@ app.use(express.json());
 
 // Root route - serve index.html or redirect to game.html
 app.get('/', (req, res) => {
-  const indexPath = path.join(__dirname, 'index.html');
-  const fs = require('fs');
-  }
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 
 
 
@@ -603,5 +603,6 @@ server.listen(PORT, () => {
   console.log(`📂 Serving files from: ${__dirname}`);
   console.log(`🌐 Game URL: http://localhost:${PORT}/game.html`);
 });
+
 
 
