@@ -20,14 +20,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   const indexPath = path.join(__dirname, 'index.html');
   const fs = require('fs');
-  
-  // Check if index.html exists, otherwise redirect to game.html
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.redirect('/game.html');
-  }
-});
+
 
 
 // ── IN-MEMORY STORES ──────────────────────────────────────────
@@ -609,3 +602,4 @@ server.listen(PORT, () => {
   console.log(`📂 Serving files from: ${__dirname}`);
   console.log(`🌐 Game URL: http://localhost:${PORT}/game.html`);
 });
+
